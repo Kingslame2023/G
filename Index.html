@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giveaway Anmeldung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 300px;
+        }
+        h2 { color: #333; margin-bottom: 20px; }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0088cc; /* Telegram Blau */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover { background-color: #006699; }
+        #status { margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Giveaway Teilnahme</h2>
+    <form id="giveawayForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Dein Name" required>
+        <button type="submit">Anmelden</button>
+    </form>
+    <div id="status"></div>
+</div>
+
+<script>
+    document.getElementById('giveawayForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nameInput = document.getElementById('name');
+        const statusDiv = document.getElementById('status');
+        
+        statusDiv.innerText = "Sende...";
+        statusDiv.style.color = "orange";
+
+        try {
+            // Schickt den Namen an deinen lokalen Server (Port 3000)
+            const response = await fetch('http://localhost:3000/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: nameInput.value })
+            });
+
+            if (response.ok) {
+                statusDiv.innerText = "Erfolgreich angemeldet! 🎉";
+                statusDiv.style.color = "green";
+                nameInput.value = ""; // Feld leeren
+            } else {
+                statusDiv.innerText = "Fehler bei der Anmeldung.";
+                statusDiv.style.color = "red";
+            }
+        } catch (error) {
+            statusDiv.innerText = "Server nicht erreichbar.";
+            statusDiv.style.color = "red";
+        }
+    });
+</script>
+
+</body>
+</html>
